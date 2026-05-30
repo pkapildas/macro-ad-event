@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseOps Console // IT Operations Event Dashboard</title>
+  <meta name="description" content="A premium live operations center tracking system alerts, server health, and security telemetry events.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Glowing telemetry matrix spots -->
+  <div class="glow-spot glow-spot-1"></div>
+  <div class="glow-spot glow-spot-2"></div>
+
+  <div class="app-container">
+    
+    <!-- Premium telemetry header -->
+    <header class="app-header">
+      <div class="app-branding">
+        <div class="app-logo">Ω</div>
+        <div class="app-title">
+          <h1>PulseOps Console</h1>
+          <p>MACRO-AD based Anonaly detection for IT OPs</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="btn-icon-only" title="Toggle Theme" aria-label="Toggle light and dark themes">
+          <i data-lucide="moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Telemetry Statistics Dashboard Banner -->
+    <section class="dashboard-stats" aria-label="System Metrics Summary">
+      <div class="stat-card">
+        <div class="stat-icon red pulsing-critical">
+          <i data-lucide="alert-octagon"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-active-alerts">0</h3>
+          <p>Active Alerts</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i data-lucide="zap"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-critical-count">0</h3>
+          <p>Critical Outages</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i data-lucide="clock"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-mtta">0s</h3>
+          <p>Avg MTTA</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon emerald">
+          <i data-lucide="heart-pulse"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-system-health">100%</h3>
+          <p>System Health</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main operations grid -->
+    <div class="workspace-grid">
+      
+      <!-- Left sidebar panel (Alert filters & Searches) -->
+      <aside class="sidebar-panel" aria-label="Alert Filter Dashboard">
+        <div class="sidebar-title">
+          <i data-lucide="filter-x" class="text-primary"></i>
+          <h2>Telemetry Filters</h2>
+        </div>
+        
+        <!-- Search bar -->
+        <div class="filter-section">
+          <div class="filter-section-title">Query Host or Summary</div>
+          <div class="search-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Search server node, summary..." aria-label="Search incident logs">
+          </div>
+        </div>
+        
+        <!-- Severities checklist / buttons -->
+        <div class="filter-section">
+          <div class="filter-section-title">Severity Levels</div>
+          <nav class="category-list" id="severity-filter-list" aria-label="Severities filter">
+            <!-- Dynamically populated from JS -->
+          </nav>
+        </div>
+
+        <!-- Health diagnostics links -->
+        <div class="filter-section">
+          <div class="filter-section-title">Diagnostics Status</div>
+          <nav class="category-list" id="status-filter-list" aria-label="Incident status filters">
+            <button class="category-pill active" data-status="all">
+              <span>All Events</span>
+              <span class="category-count" id="count-all">0</span>
+            </button>
+            <button class="category-pill" data-status="unresolved">
+              <span>Unresolved Alerts</span>
+              <span class="category-count" id="count-unresolved">0</span>
+            </button>
+            <button class="category-pill" data-status="resolved">
+              <span>Resolved Logs</span>
+              <span class="category-count" id="count-resolved">0</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Right Main content: logs grid table -->
+      <main class="main-content-panel">
+        
+        <!-- Toolbar for Status tabs & view counts -->
+        <div class="content-toolbar">
+          <div class="results-meta">
+            Displaying <span id="displayed-events-count">0</span> of <span id="total-events-count">0</span> Incident Events
+          </div>
+          
+          <!-- Status lifecycle tabs -->
+          <div class="status-tabs" id="status-lifecycle-tabs">
+            <button class="status-tab-btn active" data-lifecycle="all">All</button>
+            <button class="status-tab-btn" data-lifecycle="active">Active</button>
+            <button class="status-tab-btn" data-lifecycle="acknowledged">Ack'd</button>
+            <button class="status-tab-btn" data-lifecycle="resolved">Resolved</button>
+          </div>
+        </div>
+
+        <!-- Density tabular grid container -->
+        <section class="incidents-container" aria-label="Incident Log Grid">
+          <div class="incidents-table-wrapper">
+            <table class="incidents-table">
+              <thead>
+                <tr>
+                  <th>Event ID</th>
+                  <th id="th-severity" class="sortable">Severity <span id="severity-sort-icon"></span></th>
+                  <th>Host</th>
+                  <th>Summary</th>
+                  <th>Trigger Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="incidents-table-body">
+                <!-- Dynamically populated rows from JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Empty State panel inside grid -->
+          <div class="empty-state" id="empty-state-panel" style="display: none;">
+            <div class="empty-state-icon">
+              <i data-lucide="database-zap"></i>
+            </div>
+            <h3 class="empty-state-title">No system logs found</h3>
+            <p class="empty-state-desc">There are no operational events matching the current telemetry query or severity constraints.</p>
+            <button class="btn btn-secondary" id="reset-filters-btn">Reset Telemetry Filters</button>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+
+
+  <!-- ============================================
+       SLIDE-OVER: DETAILED INCIDENT telemetry SUMMARY & METRICS
+       ============================================ -->
+  <div class="slideover-overlay" id="detail-slideover-overlay"></div>
+  <div class="slideover-panel" id="detail-slideover-panel" role="dialog" aria-modal="true" aria-labelledby="slideover-event-title">
+    
+    <!-- Telemetry incident header -->
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <button class="detail-close-btn btn-icon-only" id="close-detail-btn" aria-label="Close detail panel">
+          <i data-lucide="chevron-right"></i>
+        </button>
+        <div class="detail-header-info">
+          <span class="detail-header-subtitle" id="detail-event-id">EVT-LOADING...</span>
+          <h2 id="detail-title">Incident Title Loading...</h2>
+        </div>
+      </div>
+      <div id="detail-severity-container">
+        <!-- Severity badge generated dynamically -->
+      </div>
+    </div>
+
+    <!-- Scrollable Panel Body -->
+    <div class="detail-content">
+      
+      <!-- Telemetry Parameters Matrix -->
+      <section class="detail-quick-info" aria-label="Incident telemetry details">
+        <div class="info-item">
+          <div class="info-icon">
+            <i data-lucide="server"></i>
+          </div>
+          <div class="info-text">
+            <p>Host</p>
+            <p id="detail-host">unknown-server</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <i data-lucide="activity"></i>
+          </div>
+          <div class="info-text">
+            <p>Metric Threshold</p>
+            <p id="detail-threshold">cpu_util > 95%</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <i data-lucide="layers"></i>
+          </div>
+          <div class="info-text">
+            <p>Impacted Service</p>
+            <p id="detail-service">Unknown Layer</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Alert Description -->
+      <section aria-labelledby="sec-desc">
+        <h3 class="detail-section-title" id="sec-desc">Incident Diagnostics Summary</h3>
+        <p class="detail-description" id="detail-description">
+          Incident diagnostics trace analysis and system description will be details here.
+        </p>
+      </section>
+
+      <!-- ML Autopilot Diagnostics Section -->
+      <div id="detail-ml-diagnostics-container" style="margin-bottom: 20px; display: none;"></div>
+
+      <!-- Real-time SVG Telemetry Resource Timelines -->
+      <section aria-labelledby="sec-analytics">
+        <h3 class="detail-section-title" id="sec-analytics">Telemetry Timeline & Historical Frequency</h3>
+        
+        <div class="analytics-grid">
+          <!-- Chart 1: CPU / Memory Utilization Spikes (Line Chart) -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Resource Load Trend</span>
+              <span class="chart-metric" id="chart-load-metric">0% Util</span>
+            </div>
+            <div class="chart-container" id="line-chart-wrapper">
+              <!-- Dynamically generated SVG Resource Spike Chart will go here -->
+            </div>
+          </div>
+          
+          <!-- Chart 2: Historic Alert frequencies (Bar Chart) -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Historical Host Alerts</span>
+              <span class="chart-metric" id="chart-history-metric">0 Events</span>
+            </div>
+            <div class="chart-container" id="bar-chart-wrapper">
+              <!-- Dynamically generated SVG bar Chart will go here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terminal Log Snippets section -->
+      <section aria-labelledby="sec-terminal">
+        <h3 class="detail-section-title" id="sec-terminal">Simulated Host Syslog Output (Tail -n 8)</h3>
+        <div class="log-terminal" id="detail-log-terminal">
+          <!-- Dynamically populated monospaced system logs from JS -->
+        </div>
+      </section>
+
+      <!-- OpsCopilot AI Diagnostic Chat Assistant Widget -->
+      <section aria-labelledby="sec-copilot">
+        <h3 class="detail-section-title" id="sec-copilot">OpsCopilot AI Diagnostics Assistant</h3>
+        <div class="opscopilot-chat-widget">
+          
+          <div class="chat-widget-header">
+            <span class="chat-widget-title">
+              <i data-lucide="bot" style="width: 16px; height: 16px; color: var(--primary);"></i>
+              OpsCopilot Diagnostic Chat
+            </span>
+            <div class="chat-online-indicator">
+              <span class="chat-online-dot"></span>
+              Online
+            </div>
+          </div>
+
+          <!-- Chat logs container -->
+          <div class="chat-history-log" id="chat-history-log">
+            <!-- Dynamically populated bubble streams in JS -->
+          </div>
+
+          <!-- Suggested quick questions pills -->
+          <div class="chat-suggested-prompts" id="chat-suggested-prompts">
+            <!-- Suggested diagnostic quick pills -->
+          </div>
+
+          <!-- Input bar form row -->
+          <form class="chat-input-row" id="chat-input-form">
+            <input type="text" id="chat-text-input" class="chat-text-input" placeholder="Ask OpsCopilot about this alert..." required autocomplete="off">
+            <button type="submit" class="btn btn-primary" title="Send query" style="padding: 10px 14px;">
+              <i data-lucide="send" style="width: 14px; height: 14px;"></i>
+            </button>
+          </form>
+
+        </div>
+      </section>
+
+      <!-- Incident Lifecycle Interactive RSVP controls -->
+      <section class="rsvp-widget" aria-label="Incident lifecycle dashboard actions">
+        <div class="rsvp-status">
+          <span class="rsvp-status-label">Operational Event Status:</span>
+          <span class="status-pill active" id="detail-status-badge">Active</span>
+        </div>
+        <div class="rsvp-actions">
+          <button class="btn btn-primary" id="rsvp-action-btn">
+            <i data-lucide="check-square"></i>
+            <span>Acknowledge Alert</span>
+          </button>
+          <button class="btn btn-secondary" id="resolve-action-btn">
+            <i data-lucide="check-circle-2"></i>
+            <span>Mark Resolved</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Toast Alert Notifications -->
+  <div class="toast-container" id="toast-container" aria-live="polite">
+    <!-- Toast notifications dynamically managed by JS -->
+  </div>
+
+  <!-- Lucide Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Main Operational Controller Script -->
+  <script src="app.js"></script>
+</body>
+</html>
