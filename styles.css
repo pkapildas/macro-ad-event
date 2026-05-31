@@ -1441,3 +1441,299 @@ body.light-theme .incidents-table tbody tr:hover {
   color: var(--text-secondary);
   line-height: 1.45;
 }
+
+/* ==========================================================================
+   RESPONSIVE & REACTIVE MEDIA QUERIES (ADJUSTS TO SCREEN WIDTHS & RESOLUTIONS)
+   ========================================================================== */
+
+/* 1. Large Monitors and Ultra-wides (Contained by container max-width) */
+@media (min-width: 1441px) {
+  .app-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* 2. Tablet and Medium Screens (max-width: 992px) */
+@media (max-width: 992px) {
+  /* Let sidebar occupy static layout rather than weird sticky scrolling in single-column grid */
+  .sidebar-panel {
+    position: static !important;
+    top: auto !important;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+
+  .sidebar-title {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+  }
+
+  .filter-section {
+    margin-bottom: 0 !important;
+  }
+
+  /* Make lists flex horizontal when space permits in tablet */
+  .category-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .category-pill {
+    flex: 1 1 calc(50% - 8px); /* Take half width or wrap */
+    justify-content: space-between;
+  }
+}
+
+/* 3. Small Tablets and Mobile Viewports (max-width: 768px) */
+@media (max-width: 768px) {
+  /* --- TRANSFORMS TABLE ROWS INTO PREMIUM INTERACTIVE CARDS --- */
+  .incidents-table-wrapper {
+    overflow-x: visible !important;
+    border: none;
+    background: transparent;
+  }
+
+  .incidents-table {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+  .incidents-table thead {
+    display: none !important; /* Hide traditional desktop header rows */
+  }
+
+  .incidents-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px;
+  }
+
+  .incidents-table tbody tr {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 8px !important;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md) !important;
+    padding: 16px !important;
+    transition: var(--transition-spring) !important;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+
+  body.light-theme .incidents-table tbody tr {
+    background: var(--bg-secondary);
+  }
+
+  .incidents-table tbody tr:hover {
+    background: var(--bg-tertiary) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-focus);
+  }
+
+  /* Map cell layout positions */
+  .incidents-table td {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    white-space: normal !important;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* TD 1: Event ID */
+  .incidents-table td:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* TD 2: Severity Badge */
+  .incidents-table td:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  /* TD 3: Host name */
+  .incidents-table td:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 4px;
+  }
+
+  /* TD 6: Status Pill */
+  .incidents-table td:nth-child(6) {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    margin-top: 4px;
+  }
+
+  /* TD 4: Summary Text */
+  .incidents-table td:nth-child(4) {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    line-height: 1.5;
+    min-width: 0;
+    max-width: none;
+  }
+
+  /* TD 5: Occurred Time (Footer of Card) */
+  .incidents-table td:nth-child(5) {
+    grid-column: 1 / span 2;
+    grid-row: 4;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    padding-top: 10px !important;
+    border-top: 1px dashed var(--border) !important;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+/* 4. Compact Mobile Phones (max-width: 576px) */
+@media (max-width: 576px) {
+  .app-container {
+    padding: 16px 12px;
+  }
+
+  /* Stacking header elements cleanly */
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Stacking sidebar filters vertically on tiny phones */
+  .sidebar-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .category-list {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .category-pill {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  /* Stacking toolbar details & sizing tabs */
+  .content-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .status-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status-tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  /* Detail Slide-over Panel Content Tightening */
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .detail-close-btn {
+    margin-right: 4px;
+  }
+
+  #detail-severity-container {
+    align-self: flex-start;
+  }
+
+  .detail-content {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  /* Long word breaking and wrapping */
+  .info-text {
+    min-width: 0;
+  }
+
+  .info-text p:last-child {
+    word-break: break-all;
+    font-size: 12px;
+  }
+
+  /* Centering ML diagnostics indicator */
+  .ml-diagnostics-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .ml-diagnostics-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* RSVP widget vertical stacking and size */
+  .rsvp-widget {
+    padding: 16px;
+  }
+
+  .rsvp-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rsvp-actions .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  /* Touch accessibility overrides */
+  .btn-icon-only {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+

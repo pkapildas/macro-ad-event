@@ -6,6 +6,7 @@
   <title>PulseOps Console // IT Operations Event Dashboard</title>
   <meta name="description" content="A premium live operations center tracking system alerts, server health, and security telemetry events.">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="copilot.css">
 </head>
 <body>
 
@@ -151,7 +152,7 @@
                   <th id="th-severity" class="sortable">Severity <span id="severity-sort-icon"></span></th>
                   <th>Host</th>
                   <th>Summary</th>
-                  <th>Trigger Time</th>
+                  <th>Occurred Time</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -343,6 +344,51 @@
     </div>
   </div>
 
+  <!-- Floating Global AI Copilot Chat Agent -->
+  <div class="global-copilot-container" id="global-copilot-container">
+    <!-- Floating Trigger Bubble -->
+    <button class="copilot-trigger-btn" id="global-copilot-trigger" aria-label="Open OpsCopilot AI Assistant" title="Open OpsCopilot AI Assistant">
+      <i data-lucide="bot"></i>
+      <span class="pulse-indicator"></span>
+    </button>
+
+    <!-- Sleek Glassmorphic Chat Panel -->
+    <div class="global-copilot-chat-panel" id="global-copilot-panel">
+      <div class="copilot-panel-header">
+        <div class="copilot-panel-branding">
+          <div class="copilot-logo-glow">
+            <i data-lucide="cpu" class="copilot-header-icon"></i>
+          </div>
+          <div class="copilot-header-title-wrapper">
+            <h3>OpsCopilot AI</h3>
+            <p>System Diagnostic Client</p>
+          </div>
+        </div>
+        <button class="copilot-panel-close" id="global-copilot-close" aria-label="Close chat panel" title="Close panel">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Chat Stream -->
+      <div class="copilot-chat-history" id="global-copilot-history"></div>
+
+      <!-- Chat suggested quick actions -->
+      <div class="copilot-suggested-prompts" id="global-copilot-suggested">
+        <button class="suggested-pill" data-prompt="Show all active outages">Show Outages</button>
+        <button class="suggested-pill" data-prompt="Check overall system health">Check Health</button>
+        <button class="suggested-pill" data-prompt="How to resolve active alerts?">How to resolve?</button>
+      </div>
+
+      <!-- Chat Input Form -->
+      <form class="copilot-chat-input-row" id="global-copilot-input-form">
+        <input type="text" id="global-copilot-text-input" class="copilot-text-input" placeholder="Ask OpsCopilot about system events..." required autocomplete="off">
+        <button type="submit" class="btn btn-primary copilot-send-btn" title="Send message">
+          <i data-lucide="send" style="width: 14px; height: 14px;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Alert Notifications -->
   <div class="toast-container" id="toast-container" aria-live="polite">
     <!-- Toast notifications dynamically managed by JS -->
@@ -353,5 +399,8 @@
   
   <!-- Main Operational Controller Script -->
   <script src="app.js"></script>
+
+  <!-- Floating Global AI Copilot Script -->
+  <script src="copilot.js"></script>
 </body>
 </html>

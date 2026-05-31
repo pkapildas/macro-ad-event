@@ -352,6 +352,7 @@ const state = {
   selectedEventId: null,
   severitySort: 'none' // 'none', 'desc', 'asc'
 };
+window.state = state;
 
 // --- ELEMENT SELECTORS ---
 const dom = {
@@ -722,6 +723,7 @@ function setupEventListeners() {
     e.preventDefault();
     handleChatSubmit();
   });
+
 }
 
 // --- RENDER ALL APP PANELS ---
@@ -936,6 +938,7 @@ function clearAllFilters() {
   renderIncidentsTable();
   showToast('Operational filters reset successfully.');
 }
+window.clearAllFilters = clearAllFilters;
 
 function updateSeveritySortHeaderUI() {
   if (!dom.severitySortIcon) return;

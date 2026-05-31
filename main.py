@@ -155,3 +155,12 @@ def resolve_event(event_id: str):
             ))
             return e
     raise HTTPException(status_code=404, detail=f"Incident {event_id} not found in telemetry registry.")
+
+@app.delete("/api/events/{event_id}")
+def delete_event(event_id: str):
+    """Delete an operational event from the database registry."""
+    for idx, e in enumerate(DATABASE):
+        if e.id == event_id:
+            DATABASE.pop(idx)
+            return {"status": "success", "message": f"Incident {event_id} successfully deleted from registry."}
+    raise HTTPException(status_code=404, detail=f"Incident {event_id} not found in telemetry registry.")

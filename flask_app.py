@@ -167,6 +167,15 @@ def resolve_event(event_id):
             return jsonify(serialize_event(e))
     abort(404, description=f"Incident {event_id} not found in telemetry registry.")
 
+@app.route('/api/events/<event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    """Delete an operational event from the database registry."""
+    for idx, e in enumerate(DATABASE):
+        if e.id == event_id:
+            DATABASE.pop(idx)
+            return jsonify({"status": "success", "message": f"Incident {event_id} successfully deleted from registry."})
+    abort(404, description=f"Incident {event_id} not found in telemetry registry.")
+
 # Run Flask server
 if __name__ == '__main__':
     print("PulseOps Flask API server booting on http://localhost:8000")
